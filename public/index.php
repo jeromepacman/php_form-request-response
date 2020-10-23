@@ -1,15 +1,20 @@
 <?php
 
     $pdo = new PDO('mysql:host=acs-exercice-selectbox-mysql;dbname=test1', 'root', 'acsql', [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
-
-
-        //request from response GET
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+    ]);
+        //checkbox generator
+    $for_form = $pdo->query('SELECT * FROM Country.db');
+    $form_country = $for_form->fetchAll();
+       
+        // selected choice verif
     if (isset($_GET["country"])){
         $coun = $_GET['country'];
+
         // prepare sql
-        $query = $pdo->prepare('SELECT city FROM Country_db WHERE country = :country');
-        // parameters
+        $query = $pdo->prepare('SELECT city, FROM Country_db WHERE country = :country');
+
+        //param
         $query->bindParam(':country', $coun);
         $query->execute();
         $fetch = $query->fetch();
@@ -17,6 +22,7 @@
 
         $result = "$city est la capitale de $coun";
     }
+    
 
 ?>
 <!DOCTYPE html>
@@ -29,15 +35,16 @@
 </head>
 
 
-<body>
+<body> <!-- selectbox --->
     <div class="container text-center">
         <form method="get" action="index.php">
             <div class="form-group">
                 <select class="custom-select" name="country">
                     <option selected value>Select your country</option>
-                    <option value="FR">France</option>
-                    <option value="GE">Germany</option>
-                    <option value="IT">Italy</option>
+                    <?php foreach ($form_country as $item): ?>
+                       <option> <?= $item ?> </option>
+                    <?php endforeach; ?>
+                    
                 </select>
             </div>
             <div class="form-group">
@@ -45,7 +52,7 @@
             </div>
         </form>
 
-
+        <!--display result -->
         <?php if(isset($result)):?>
             <h4><?= $result ?></h4>
         <?php endif ?>
