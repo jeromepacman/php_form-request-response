@@ -1,24 +1,22 @@
 <?php
 
     $pdo = new PDO('mysql:host=acs-exercice-selectbox-mysql;dbname=test1', 'root', 'acsql', [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-    ]);
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+
+
         //request from response GET
     if (isset($_GET["country"])){
-        $count = $_GET['country'];
+        $coun = $_GET['country'];
         // prepare sql
         $query = $pdo->prepare('SELECT city FROM Country_db WHERE country = :country');
         // parameters
-        $query->bindParam(':country', $count);
+        $query->bindParam(':country', $coun);
         $query->execute();
         $fetch = $query->fetch();
         $city = $fetch['city'];
 
-        $result = "$city est la capitale de $count";
+        $result = "$city est la capitale de $coun";
     }
- 
-    
-    
 
 ?>
 <!DOCTYPE html>
@@ -32,7 +30,7 @@
 
 
 <body>
-    <div class="container">
+    <div class="container text-center">
         <form method="get" action="index.php">
             <div class="form-group">
                 <select class="custom-select" name="country">
